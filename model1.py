@@ -42,4 +42,4 @@ submission_df = pd.DataFrame({
 })
 
 # Save submission file
-submission_df.to_csv('submission.csv', index=False)
+submission_df.to_csv('submission1.csv', index=False)
