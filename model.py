@@ -11,7 +11,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import confusion_matrix, classification_report 
 
 # Load data from CSV file
-z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')
+z = zipfile.ZipFile('youtube_comments.zip')
 train_data = pd.read_csv(z.open('train.csv'))
 print train_data
 
