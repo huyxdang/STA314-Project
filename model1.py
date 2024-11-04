@@ -8,7 +8,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer as vectorizer
 from sklearn.naive_bayes import MultinomialNB
 
 # Load data from CSV file
-z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')
+z = zipfile.ZipFile('file_path/raw_data_file.csv') # Put ur local path for ur file here
 train_data = pd.read_csv(z.open('train.csv')) # Training data
 test_data = pd.read_csv(z.open('test.csv')) # Test data
 
