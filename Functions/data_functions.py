@@ -1,7 +1,7 @@
 import pandas as pd
 import zipfile 
 
-def extract(file_path):
+def extract(file_path = "/Users/huydang/Desktop/STA314/Project/youtube_comments.zip"):
     """
     Load and extract zipfile into training and testing data sets
     
