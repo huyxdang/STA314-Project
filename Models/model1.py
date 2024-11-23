@@ -41,5 +41,7 @@ submission_df = pd.DataFrame({
     'CLASS': Y_pred
 })
 
+print(type(test_comment_ids))
+
 # Save submission file
 submission_df.to_csv('submission1.csv', index=False)
