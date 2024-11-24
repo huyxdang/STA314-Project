@@ -1,9 +1,14 @@
-import re
 from collections import Counter
 import numpy as np
 from urllib.parse import urlparse
 import emoji
-from sklearn.ensemble import RandomForestClassifier
+import pandas as pd
+import matplotlib.pyplot as plt
+import re
+
+def replace_urls_with_placeholder(comment):
+    return re.sub(r'http[s]?://\S+|www\.\S+', 'URL', comment)
+
 
 def extract_text_features(comment):
     """
@@ -17,14 +22,20 @@ def extract_text_features(comment):
     """
     # Convert to lowercase for some analyses
     lower_comment = comment.lower()
+
+    # Replace URLs with <URL>
+    comment_with_placeholder = replace_urls_with_placeholder(comment)
     
     # Basic length features
     features = {
-        'length': len(comment),
-        'word_count': len(comment.split()),
-        'avg_word_length': np.mean([len(word) for word in comment.split()]) if comment else 0,
+        'length': len(comment), # Total number of characters in the comment 
+        'word_count': len(comment.split()), # Word count
+        'avg_word_length': np.mean([len(word) for word in comment.split()]) if comment else 0, # Avgerage world length
+        'length_classification': 1 if len(comment_with_placeholder) >= 200 else 2  # Classification: 1 for Short, 2 for Short
     }
-    
+
+
+
     # Character ratios
     features.update({
         'caps_ratio': sum(1 for c in comment if c.isupper()) / (len(comment) if len(comment) > 0 else 1),
@@ -85,6 +96,8 @@ def extract_text_features(comment):
     })
     
     return features
+
+
 
 def create_feature_matrix(comments):
     """
