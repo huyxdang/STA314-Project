@@ -1,42 +1,36 @@
 import pandas as pd
 import numpy as np
 import time
-import psutil
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, f1_score
-from sklearn.svm import SVC
-import zipfile
+from sklearn.naive_bayes import MultinomialNB
 
 # Load data
 z = '/Users/huydang/Desktop/STA314-Project/Full_data.csv'
-train_data = pd.read_csv(z)  # Training data
-test_data = pd.read_csv(z)  # Test data
+data = pd.read_csv(z)  # Full dataset
 
-# Extract features and labels
-X_train = train_data['CONTENT'].values  # Text content for training
-Y_train = train_data['CLASS'].values  # Labels for training
-X_test = test_data['CONTENT'].values  # Text content for testing
-test_ids = test_data['COMMENT_ID'].values  # Comment IDs for the test data
+# Split data into features and labels
+X = data['CONTENT'].values  # Text content
+Y = data['CLASS'].values  # Labels
 
-# Create Bag of Words representation with character n-grams (length 6)
-vectorizer = CountVectorizer(analyzer='char', ngram_range=(1, 8))  # Character 6-grams
-X_train_bow = vectorizer.fit_transform(X_train)
-X_test_bow = vectorizer.transform(X_test)
+# Create TF-IDF representation with character 6-grams
+vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(1, 8), max_features=5000)  # Character 6-grams
+X_tfidf = vectorizer.fit_transform(X)
 
-# Stratified K-Fold Cross-Validation
+# Stratified 5-Fold Cross-Validation
 skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 fold_metrics = []
 
 # Training and validation loop
-for fold, (train_idx, val_idx) in enumerate(skf.split(X_train_bow, Y_train)):
+for fold, (train_idx, val_idx) in enumerate(skf.split(X_tfidf, Y)):
     print(f"Fold {fold + 1}")
-    X_train_fold, X_val_fold = X_train_bow[train_idx], X_train_bow[val_idx]
-    Y_train_fold, Y_val_fold = Y_train[train_idx], Y_train[val_idx]
+    X_train_fold, X_val_fold = X_tfidf[train_idx], X_tfidf[val_idx]
+    Y_train_fold, Y_val_fold = Y[train_idx], Y[val_idx]
 
     # Measure training time
     start_train_time = time.time()
-    model = SVC(kernel='linear', probability=True, random_state=42)
+    model = MultinomialNB()
     model.fit(X_train_fold, Y_train_fold)
     train_time = time.time() - start_train_time
 
@@ -67,8 +61,12 @@ print("\nAverage Metrics Across Folds:")
 for metric, value in average_metrics.items():
     print(f"{metric}: {value:.4f}")
 
-# Train the final model on the entire training dataset and make predictions on the test dataset
-final_model = SVC(kernel='linear', probability=True, random_state=42)
-final_model.fit(X_train_bow, Y_train)
-Y_test_pred = final_model.predict(X_test_bow)
+# Train the final model on the entire dataset
+final_model = MultinomialNB()
+final_model.fit(X_tfidf, Y)
 
+# Save the final trained model
+import joblib
+joblib.dump(final_model, 'naive_bayes_tfidf_char6.pkl')
+
+print("\nModel training complete. Final model saved as 'naive_bayes_tfidf_char6.pkl'.")
