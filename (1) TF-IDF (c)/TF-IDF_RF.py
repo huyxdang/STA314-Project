@@ -10,7 +10,7 @@ from sklearn.ensemble import RandomForestClassifier
 # Load data
 z = '/Users/huydang/Desktop/STA314-Project/Full_data.csv'
 train_data = pd.read_csv(z)  # Training data
-test_data = pd.read_csv(z)  # Test data
+test_data = pd.read_csv(z)  # Test data 
 
 # Extract features and labels
 X_train = train_data['CONTENT'].values  # Text content for training
