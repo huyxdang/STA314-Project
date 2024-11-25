@@ -12,7 +12,7 @@ import zipfile
 n = 3
 
 # Load data
-z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')
+z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip') # Change file path
 train_data = pd.read_csv(z.open('train.csv'))  # Training data
 test_data = pd.read_csv(z.open('test.csv'))  # Test data
 
