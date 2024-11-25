@@ -1,0 +1,13 @@
+# Submission
+submission_df = pd.DataFrame({
+    'COMMENT_ID': test_ids,
+    'CLASS': Y_pred
+})
+
+folder_path = "Submissions"
+if not os.path.exists(folder_path): # Check Submission Folder exists
+    os.makedirs(folder_path)
+
+file_path = os.path.join(folder_path, "submission.csv") # Assign Folder Path
+submission_df.to_csv(file_path, index=False) # Outputs CSV
+
