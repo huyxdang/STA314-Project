@@ -7,6 +7,9 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.naive_bayes import MultinomialNB
 
+# Set your n-value here:
+n = 8
+
 # Load data
 z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')
 train_data = pd.read_csv(z.open('train.csv'))  # Training data
@@ -19,7 +22,7 @@ X_test = test_data['CONTENT'].values  # Text content for testing
 test_ids = test_data['COMMENT_ID'].values  # Comment IDs for the test data
 
 # Create Bag of Words representation with character n-grams
-vectorizer = CountVectorizer(analyzer='char', ngram_range=(1, 6))  # Character n-grams (1 to 6)
+vectorizer = CountVectorizer(analyzer='char', ngram_range=(1, n))  # Character n-grams (1 to 6)
 X_train_bow = vectorizer.fit_transform(X_train)
 X_test_bow = vectorizer.transform(X_test)
 
@@ -50,7 +53,6 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(X_train_bow, Y_train)):
 
     # Record metrics
     fold_metrics.append({
-        "Fold": fold + 1,
         "Accuracy": accuracy,
         "F1-Score": f1,
         "Inference Time (s)": inference_time

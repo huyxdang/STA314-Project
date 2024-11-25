@@ -6,6 +6,9 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.naive_bayes import MultinomialNB
 
+# Set your n-value here:
+n = 8
+
 # Load data
 z = '/Users/huydang/Desktop/STA314-Project/Full_data.csv'
 data = pd.read_csv(z)  # Full dataset
@@ -15,7 +18,7 @@ X = data['CONTENT'].values  # Text content
 Y = data['CLASS'].values  # Labels
 
 # Create TF-IDF representation with character 6-grams
-vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(1, 8), max_features=5000)  # Character 6-grams
+vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(1, n), max_features=5000)  # Character 6-grams
 X_tfidf = vectorizer.fit_transform(X)
 
 # Stratified 5-Fold Cross-Validation
@@ -45,7 +48,6 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(X_tfidf, Y)):
 
     # Record metrics
     fold_metrics.append({
-        "Fold": fold + 1,
         "Accuracy": accuracy,
         "F1-Score": f1,
         "Inference Time (s)": inference_time
