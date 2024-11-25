@@ -11,9 +11,9 @@ from sklearn.svm import SVC
 n = 8
 
 # Load data
-z = '/Users/huydang/Desktop/STA314-Project/Full_data.csv'
-train_data = pd.read_csv(z)  # Training data
-test_data = pd.read_csv(z)  # Test data 
+z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')
+train_data = pd.read_csv(z.open('train.csv'))  # Training data
+test_data = pd.read_csv(z.open('test.csv'))  # Test data
 
 # Extract features and labels
 X_train = train_data['CONTENT'].values  # Text content for training
@@ -53,6 +53,7 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(X_train_tfidf, Y_train)):
 
     # Record metrics
     fold_metrics.append({
+        "Fold": fold + 1,
         "Accuracy": accuracy,
         "F1-Score": f1,
         "Inference Time (s)": inference_time

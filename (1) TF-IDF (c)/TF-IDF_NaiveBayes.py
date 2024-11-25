@@ -10,12 +10,15 @@ from sklearn.naive_bayes import MultinomialNB
 n = 8
 
 # Load data
-z = '/Users/huydang/Desktop/STA314-Project/Full_data.csv'
-data = pd.read_csv(z)  # Full dataset
+# Load data
+z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')
+train_data = pd.read_csv(z.open('train.csv'))  # Training data
+test_data = pd.read_csv(z.open('test.csv'))  # Test data
+
 
 # Split data into features and labels
-X = data['CONTENT'].values  # Text content
-Y = data['CLASS'].values  # Labels
+X = train_data['CONTENT'].values  # Text content
+Y = test_data['CLASS'].values  # Labels
 
 # Create TF-IDF representation with character 6-grams
 vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(1, n), max_features=5000)  # Character 6-grams
@@ -48,6 +51,7 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(X_tfidf, Y)):
 
     # Record metrics
     fold_metrics.append({
+        "Fold": fold + 1,
         "Accuracy": accuracy,
         "F1-Score": f1,
         "Inference Time (s)": inference_time

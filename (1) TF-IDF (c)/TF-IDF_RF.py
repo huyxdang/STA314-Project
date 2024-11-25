@@ -7,10 +7,14 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.ensemble import RandomForestClassifier
 
+# Set your n-value here:
+n = 8
+
 # Load data
-z = '/Users/huydang/Desktop/STA314-Project/Full_data.csv'
-train_data = pd.read_csv(z)  # Training data
-test_data = pd.read_csv(z)  # Test data 
+z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')
+train_data = pd.read_csv(z.open('train.csv'))  # Training data
+test_data = pd.read_csv(z.open('test.csv'))  # Test data
+
 
 # Extract features and labels
 X_train = train_data['CONTENT'].values  # Text content for training
@@ -19,7 +23,7 @@ X_test = test_data['CONTENT'].values  # Text content for testing
 test_ids = test_data['COMMENT_ID'].values  # Comment IDs for the test data
 
 # Create TF-IDF representation with word n-grams
-vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(1, 6), max_features=5000)  # Word n-grams (1 to 2)
+vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(1, n), max_features=5000)  # Word n-grams (1 to 2)
 X_train_tfidf = vectorizer.fit_transform(X_train)
 X_test_tfidf = vectorizer.transform(X_test)
 
