@@ -8,7 +8,7 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.naive_bayes import MultinomialNB
 
 # Set your n-value here:
-n = 8
+n = 1
 
 # Load data
 # Load data
