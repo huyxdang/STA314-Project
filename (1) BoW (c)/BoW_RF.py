@@ -59,6 +59,7 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(X_train_bow, Y_train)):
 
     # Record metrics
     fold_metrics.append({
+        "Fold": fold + 1,
         "Accuracy": accuracy,
         "F1-Score": f1,
         "Inference Time (s)": inference_time

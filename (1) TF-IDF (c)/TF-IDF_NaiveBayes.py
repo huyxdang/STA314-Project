@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import zipfile
 import time
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import StratifiedKFold
@@ -16,9 +17,9 @@ train_data = pd.read_csv(z.open('train.csv'))  # Training data
 test_data = pd.read_csv(z.open('test.csv'))  # Test data
 
 
-# Split data into features and labels
+# Split training data into features and labels
 X = train_data['CONTENT'].values  # Text content
-Y = test_data['CLASS'].values  # Labels
+Y = train_data['CLASS'].values  # Labels
 
 # Create TF-IDF representation with character 6-grams
 vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(1, n), max_features=5000)  # Character 6-grams
