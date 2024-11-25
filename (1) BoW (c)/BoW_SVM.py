@@ -9,7 +9,7 @@ from sklearn.svm import SVC
 import zipfile
 
 # Set your n-value here:
-n = 3
+n = 8
 
 # Load data
 z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip') # Change file path
