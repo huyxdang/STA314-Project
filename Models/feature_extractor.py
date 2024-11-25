@@ -9,7 +9,6 @@ import re
 def replace_urls_with_placeholder(comment):
     return re.sub(r'http[s]?://\S+|www\.\S+', 'URL', comment)
 
-
 def extract_text_features(comment):
     """
     Extract text-based features from a YouTube comment.
@@ -31,9 +30,8 @@ def extract_text_features(comment):
         'length': len(comment), # Total number of characters in the comment 
         'word_count': len(comment.split()), # Word count
         'avg_word_length': np.mean([len(word) for word in comment.split()]) if comment else 0, # Avgerage world length
-        'length_classification': 1 if len(comment_with_placeholder) >= 200 else 2  # Classification: 1 for Short, 2 for Short
+        'length_classification': 1 if len(comment_with_placeholder) < 200 else 2  # Classification: 1 for Short, 2 for Short
     }
-
 
 
     # Character ratios

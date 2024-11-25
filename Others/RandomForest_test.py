@@ -48,3 +48,4 @@ for train_index, val_index in skf.split(feature_matrix, y):
 
 # Print average accuracy across folds
 print(f"Average Accuracy: {sum(accuracies) / n_splits}")
+

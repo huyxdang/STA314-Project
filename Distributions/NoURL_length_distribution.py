@@ -21,8 +21,8 @@ non_spam_comments = df[df['CLASS'] == 0]
 
 # Plot the distributions
 plt.figure(figsize=(12, 6))
-plt.hist(spam_comments['comment_length'], bins=30, alpha=0.7, label='Spam', density=True)
-plt.hist(non_spam_comments['comment_length'], bins=30, alpha=0.7, label='Non-Spam', density=True)
+plt.hist(spam_comments['comment_length'], bins=20, alpha=0.7, label='Spam', density=True)
+plt.hist(non_spam_comments['comment_length'], bins=20, alpha=0.7, label='Non-Spam', density=True)
 plt.xlabel('Comment Length (by characters)')
 plt.ylabel('Density')
 plt.title('Distribution of Comment Lengths after removing URL')
