@@ -28,7 +28,7 @@ X_train_bow = vectorizer.fit_transform(X_train)
 X_test_bow = vectorizer.transform(X_test)
 
 # Stratified K-Fold Cross-Validation
-skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
 fold_metrics = []
 
 # Training and validation loop

@@ -8,8 +8,7 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.ensemble import RandomForestClassifier
 
 # Set your n-value here:
-n = 8
-
+n = 6
 # Load data
 z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip') # Change file path
 train_data = pd.read_csv(z.open('train.csv'))  # Training data
@@ -27,8 +26,8 @@ vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(1, n), max_features=5
 X_train_tfidf = vectorizer.fit_transform(X_train)
 X_test_tfidf = vectorizer.transform(X_test)
 
-# Stratified K-Fold Cross-Validation
-skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+"""# Stratified K-Fold Cross-Validation
+skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
 fold_metrics = []
 
 # Training and validation loop
@@ -74,7 +73,7 @@ average_metrics = metrics_df.drop(columns=["Fold"]).mean(axis=0).to_dict()
 print("\nAverage Metrics Across Folds:")
 for metric, value in average_metrics.items():
     print(f"{metric}: {value:.4f}")
-
+"""
 # Train the final model on the entire training dataset and make predictions on the test dataset
 final_model = RandomForestClassifier(
     n_estimators=100,
@@ -84,3 +83,15 @@ final_model = RandomForestClassifier(
 )
 final_model.fit(X_train_tfidf, Y_train)
 Y_test_pred = final_model.predict(X_test_tfidf)
+
+# Create a submission DataFrame
+submission_df = pd.DataFrame({
+    'COMMENT_ID': test_ids,
+    'CLASS': Y_test_pred
+})
+
+# Save submission DataFrame to a CSV file
+submission_file = 'submission_TFIDF_RF.csv'
+submission_df.to_csv(submission_file, index=False)
+
+print(f"Submission file saved as {submission_file}")

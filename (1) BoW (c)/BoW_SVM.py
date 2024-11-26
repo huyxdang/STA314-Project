@@ -9,13 +9,12 @@ from sklearn.svm import SVC
 import zipfile
 
 # Set your n-value here:
-n = 8
+n = 7
 
 # Load data
 z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip') # Change file path
 train_data = pd.read_csv(z.open('train.csv'))  # Training data
 test_data = pd.read_csv(z.open('test.csv'))  # Test data
-
 
 # Extract features and labels
 X_train = train_data['CONTENT'].values  # Text content for training
@@ -28,8 +27,9 @@ vectorizer = CountVectorizer(analyzer='char', ngram_range=(1, n))  # Character 6
 X_train_bow = vectorizer.fit_transform(X_train)
 X_test_bow = vectorizer.transform(X_test)
 
+"""
 # Stratified K-Fold Cross-Validation
-skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
 fold_metrics = []
 
 # Training and validation loop
@@ -70,9 +70,21 @@ average_metrics = metrics_df.drop(columns=["Fold"]).mean(axis=0).to_dict()
 print("\nAverage Metrics Across Folds:")
 for metric, value in average_metrics.items():
     print(f"{metric}: {value:.4f}")
-
+"""
 # Train the final model on the entire training dataset and make predictions on the test dataset
 final_model = SVC(kernel='linear', probability=True, random_state=42)
 final_model.fit(X_train_bow, Y_train)
 Y_test_pred = final_model.predict(X_test_bow)
+
+# Create a submission DataFrame
+submission_df = pd.DataFrame({
+    'COMMENT_ID': test_ids,
+    'CLASS': Y_test_pred
+})
+
+# Save submission DataFrame to a CSV file
+submission_file = 'submission_SVC_BOW.csv'
+submission_df.to_csv(submission_file, index=False)
+
+print(f"Submission file saved as {submission_file}")
 

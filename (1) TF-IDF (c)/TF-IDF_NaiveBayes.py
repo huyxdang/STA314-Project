@@ -8,7 +8,7 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.naive_bayes import MultinomialNB
 
 # Set your n-value here:
-n = 1
+n = 10
 
 # Load data
 # Load data
@@ -26,7 +26,7 @@ vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(1, n), max_features=5
 X_tfidf = vectorizer.fit_transform(X)
 
 # Stratified 5-Fold Cross-Validation
-skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
 fold_metrics = []
 
 # Training and validation loop

@@ -8,7 +8,7 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.svm import SVC
 
 # Set your n-value here:
-n = 8
+n = 10 
 
 # Load data
 z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip') # Change file path
@@ -27,7 +27,7 @@ X_train_tfidf = vectorizer.fit_transform(X_train)
 X_test_tfidf = vectorizer.transform(X_test)
 
 # Stratified K-Fold Cross-Validation
-skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
 fold_metrics = []
 
 # Training and validation loop
