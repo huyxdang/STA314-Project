@@ -8,33 +8,32 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.ensemble import RandomForestClassifier
 
 # Set your n-value here:
-n = 6
+n = 10
+
+# Load data
 # Load data
 z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip') # Change file path
 train_data = pd.read_csv(z.open('train.csv'))  # Training data
 test_data = pd.read_csv(z.open('test.csv'))  # Test data
 
 
-# Extract features and labels
-X_train = train_data['CONTENT'].values  # Text content for training
-Y_train = train_data['CLASS'].values  # Labels for training
-X_test = test_data['CONTENT'].values  # Text content for testing
-test_ids = test_data['COMMENT_ID'].values  # Comment IDs for the test data
+# Split training data into features and labels
+X = train_data['CONTENT'].values  # Text content
+Y = train_data['CLASS'].values  # Labels
 
-# Create TF-IDF representation with word n-grams
-vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(1, n), max_features=5000)  # Word n-grams (1 to 2)
-X_train_tfidf = vectorizer.fit_transform(X_train)
-X_test_tfidf = vectorizer.transform(X_test)
+# Create TF-IDF representation with character 6-grams
+vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(n, n), max_features=5000)  # Character 6-grams
+X_tfidf = vectorizer.fit_transform(X)
 
-"""# Stratified K-Fold Cross-Validation
+# Stratified K-Fold Cross-Validation
 skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
 fold_metrics = []
 
 # Training and validation loop
-for fold, (train_idx, val_idx) in enumerate(skf.split(X_train_tfidf, Y_train)):
+for fold, (train_idx, val_idx) in enumerate(skf.split(X_tfidf, Y)):
     print(f"Fold {fold + 1}")
-    X_train_fold, X_val_fold = X_train_tfidf[train_idx], X_train_tfidf[val_idx]
-    Y_train_fold, Y_val_fold = Y_train[train_idx], Y_train[val_idx]
+    X_train_fold, X_val_fold = X_tfidf[train_idx], X_tfidf[val_idx]
+    Y_train_fold, Y_val_fold = Y[train_idx], Y[val_idx]
 
     # Measure training time
     start_train_time = time.time()
@@ -73,25 +72,3 @@ average_metrics = metrics_df.drop(columns=["Fold"]).mean(axis=0).to_dict()
 print("\nAverage Metrics Across Folds:")
 for metric, value in average_metrics.items():
     print(f"{metric}: {value:.4f}")
-"""
-# Train the final model on the entire training dataset and make predictions on the test dataset
-final_model = RandomForestClassifier(
-    n_estimators=100,
-    max_depth=None,
-    random_state=42,
-    n_jobs=-1
-)
-final_model.fit(X_train_tfidf, Y_train)
-Y_test_pred = final_model.predict(X_test_tfidf)
-
-# Create a submission DataFrame
-submission_df = pd.DataFrame({
-    'COMMENT_ID': test_ids,
-    'CLASS': Y_test_pred
-})
-
-# Save submission DataFrame to a CSV file
-submission_file = 'submission_TFIDF_RF.csv'
-submission_df.to_csv(submission_file, index=False)
-
-print(f"Submission file saved as {submission_file}")

@@ -22,10 +22,10 @@ X = train_data['CONTENT'].values  # Text content
 Y = train_data['CLASS'].values  # Labels
 
 # Create TF-IDF representation with character 6-grams
-vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(1, n), max_features=5000)  # Character 6-grams
+vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(n, n), max_features=5000)  # Character 6-grams
 X_tfidf = vectorizer.fit_transform(X)
 
-# Stratified 5-Fold Cross-Validation
+# Stratified 10-Fold Cross-Validation
 skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
 fold_metrics = []
 
@@ -71,9 +71,3 @@ for metric, value in average_metrics.items():
 # Train the final model on the entire dataset
 final_model = MultinomialNB()
 final_model.fit(X_tfidf, Y)
-
-# Save the final trained model
-import joblib
-joblib.dump(final_model, 'naive_bayes_tfidf_char6.pkl')
-
-print("\nModel training complete. Final model saved as 'naive_bayes_tfidf_char6.pkl'.")
