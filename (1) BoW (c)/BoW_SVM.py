@@ -7,12 +7,25 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.svm import SVC
 import zipfile
+from nltk.stem import PorterStemmer
+import nltk
+
+# Download NLTK resources (if needed)
+nltk.download('punkt')
 
 # Set your n-value here:
-n = 7
+n = 4
+
+# Initialize the stemmer
+stemmer = PorterStemmer()
+
+# Custom tokenizer that applies stemming
+def stem_tokenizer(text):
+    words = nltk.word_tokenize(text)  # Tokenize the text into words
+    return [stemmer.stem(word) for word in words]  # Apply stemming to each word
 
 # Load data
-z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip') # Change file path
+z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')  # Change file path
 train_data = pd.read_csv(z.open('train.csv'))  # Training data
 test_data = pd.read_csv(z.open('test.csv'))  # Test data
 
@@ -22,12 +35,12 @@ Y_train = train_data['CLASS'].values  # Labels for training
 X_test = test_data['CONTENT'].values  # Text content for testing
 test_ids = test_data['COMMENT_ID'].values  # Comment IDs for the test data
 
-# Create Bag of Words representation with character n-grams (length 6)
-vectorizer = CountVectorizer(analyzer='char', ngram_range=(1, n))  # Character 6-grams
+# Create Bag of Words representation with character n-grams
+vectorizer = CountVectorizer(analyzer='char', ngram_range=(n, n), tokenizer=stem_tokenizer)  # Apply stemming during tokenization
 X_train_bow = vectorizer.fit_transform(X_train)
 X_test_bow = vectorizer.transform(X_test)
 
-"""
+
 # Stratified K-Fold Cross-Validation
 skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
 fold_metrics = []
@@ -70,11 +83,12 @@ average_metrics = metrics_df.drop(columns=["Fold"]).mean(axis=0).to_dict()
 print("\nAverage Metrics Across Folds:")
 for metric, value in average_metrics.items():
     print(f"{metric}: {value:.4f}")
-"""
+
 # Train the final model on the entire training dataset and make predictions on the test dataset
 final_model = SVC(kernel='linear', probability=True, random_state=42)
 final_model.fit(X_train_bow, Y_train)
 Y_test_pred = final_model.predict(X_test_bow)
+
 
 # Create a submission DataFrame
 submission_df = pd.DataFrame({
@@ -83,8 +97,7 @@ submission_df = pd.DataFrame({
 })
 
 # Save submission DataFrame to a CSV file
-submission_file = 'submission_SVC_BOW.csv'
+submission_file = 'submission_BoW_SVM.csv'
 submission_df.to_csv(submission_file, index=False)
 
 print(f"Submission file saved as {submission_file}")
-

@@ -36,11 +36,12 @@ Y_test_pred = final_model.predict(X_test_bow)
 submission_df = pd.DataFrame({'COMMENT_ID': test_ids, 'CLASS_pred': Y_test_pred})
 
 # Load ground truth labels for test data
-test_with_labels = pd.read_csv('/Users/huydang/Desktop/STA314-Project/test_with_labels.csv')  # Update path if necessary
+test_with_labels = pd.read_csv('/Users/huydang/Desktop/STA314-Project/labeled_test.csv')  # Update path if necessary
 
 # Ensure ground truth labels have the correct columns
 test_with_labels.rename(columns={'CLASS': 'CLASS_true'}, inplace=True)
-test_with_labels = test_with_labels[['COMMENT_ID', 'CLASS_true']]
+test_with_labels.rename(columns={'COMMENT_ID': 'COMMENT_ID_x'}, inplace=True)
+test_with_labels = test_with_labels[['COMMENT_ID', 'CLASS']]
 
 # Set COMMENT_ID as the index for both DataFrames
 submission_df = submission_df.set_index('COMMENT_ID')

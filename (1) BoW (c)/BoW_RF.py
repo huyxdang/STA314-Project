@@ -6,13 +6,22 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.ensemble import RandomForestClassifier
+from nltk.stem import PorterStemmer
 import zipfile
 
 # Set your n-value here:
-n = 10
+n = 6
+
+# Initialize the stemmer
+stemmer = PorterStemmer()
+
+# Custom tokenizer that applies stemming
+def stem_tokenizer(text):
+    words = nltk.word_tokenize(text)  # Tokenize the text into words
+    return [stemmer.stem(word) for word in words]  # Apply stemming to each word
 
 # Load data
-z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip') # Change file path
+z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')  # Change file path
 train_data = pd.read_csv(z.open('train.csv'))  # Training data
 test_data = pd.read_csv(z.open('test.csv'))  # Test data
 
@@ -22,8 +31,8 @@ Y_train = train_data['CLASS'].values  # Labels for training
 X_test = test_data['CONTENT'].values  # Text content for testing
 test_ids = test_data['COMMENT_ID'].values  # Comment IDs for the test data
 
-# Create Bag of Words representation with character 6-grams
-vectorizer = CountVectorizer(analyzer='char', ngram_range=(1, n))  # Character 6-grams only
+# Create Bag of Words representation with character n-grams
+vectorizer = CountVectorizer(analyzer='char', ngram_range=(n, n), tokenizer=stem_tokenizer)  # Apply stemming during tokenization
 X_train_bow = vectorizer.fit_transform(X_train)
 X_test_bow = vectorizer.transform(X_test)
 
@@ -85,3 +94,15 @@ final_model = RandomForestClassifier(
 final_model.fit(X_train_bow, Y_train)
 Y_test_pred = final_model.predict(X_test_bow)
 
+
+# Create a submission DataFrame
+submission_df = pd.DataFrame({
+    'COMMENT_ID': test_ids,
+    'CLASS': Y_test_pred
+})
+
+# Save submission DataFrame to a CSV file
+submission_file = 'submission_BoW_RF.csv'
+submission_df.to_csv(submission_file, index=False)
+
+print(f"Submission file saved as {submission_file}")

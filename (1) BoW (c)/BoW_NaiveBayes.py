@@ -6,12 +6,25 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.naive_bayes import MultinomialNB
+from nltk.stem import PorterStemmer
+import nltk
+
+# Download NLTK resources (if needed)
+nltk.download('punkt')
 
 # Set your n-value here:
 n = 10
 
+# Initialize the stemmer
+stemmer = PorterStemmer()
+
+# Custom tokenizer that applies stemming
+def stem_tokenizer(text):
+    words = nltk.word_tokenize(text)  # Tokenize the text into words
+    return [stemmer.stem(word) for word in words]  # Apply stemming to each word
+
 # Load data
-z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip') # Change file path
+z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')  # Change file path
 train_data = pd.read_csv(z.open('train.csv'))  # Training data
 test_data = pd.read_csv(z.open('test.csv'))  # Test data
 
@@ -22,7 +35,7 @@ X_test = test_data['CONTENT'].values  # Text content for testing
 test_ids = test_data['COMMENT_ID'].values  # Comment IDs for the test data
 
 # Create Bag of Words representation with character n-grams
-vectorizer = CountVectorizer(analyzer='char', ngram_range=(1, n))  # Character n-grams (1 to 6)
+vectorizer = CountVectorizer(analyzer='char', ngram_range=(1, n), tokenizer=stem_tokenizer)  # Apply stemming during tokenization
 X_train_bow = vectorizer.fit_transform(X_train)
 X_test_bow = vectorizer.transform(X_test)
 
@@ -73,4 +86,3 @@ for metric, value in average_metrics.items():
 final_model = MultinomialNB()
 final_model.fit(X_train_bow, Y_train)
 Y_test_pred = final_model.predict(X_test_bow)
-

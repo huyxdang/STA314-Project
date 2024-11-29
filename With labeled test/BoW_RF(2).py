@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 import zipfile
 
 # Set your n-value here:
-n = 4
+n = 
 
 # Load data
 z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')  # Change file path

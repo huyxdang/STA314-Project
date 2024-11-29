@@ -1,48 +1,25 @@
 import pandas as pd
 import re
+import numpy as np
 
-# Load datasets
-test = "/Users/huydang/Desktop/STA314/Project/detect-spam-youtube-comment/test.csv"
-full = "/Users/huydang/Desktop/STA314/Project/detect-spam-youtube-comment/Full_data.csv"
-output = "/Users/huydang/Desktop/STA314/Project/detect-spam-youtube-comment"
+# Load the datasets
+test_df = pd.read_csv("/Users/huydang/Desktop/STA314/Project/detect-spam-youtube-comment/test.csv")  # Contains CONTENT and AUTHOR
+full_df = pd.read_csv("/Users/huydang/Desktop/STA314/Project/detect-spam-youtube-comment/Full_data.csv")  # Contains COMMENT_ID, AUTHOR, DATE, CONTENT, and CLASS
 
-def label_test_data(test_path, full_path, output_path):
-    """
-    Label test data by matching both AUTHORS and CONTENT with the full dataset.
-    
-    Parameters:
-    test_path (str): Path to test.csv
-    full_path (str): Path to full.csv
-    output_path (str): Path to save the labeled test data
-    """
-    # Read the datasets
-    test_df = pd.read_csv(test_path)
-    full_df = pd.read_csv(full_path)
-    
-    # Create a unique key combining AUTHOR and CONTENT
-    test_df['MATCH_KEY'] = test_df['AUTHOR'] + '||' + test_df['CONTENT']
-    full_df['MATCH_KEY'] = full_df['AUTHOR'] + '||' + full_df['CONTENT']
-    
-    # Create a dictionary mapping the combined key to CLASS
-    match_class_map = dict(zip(full_df['MATCH_KEY'], full_df['CLASS']))
-    
-    # Add CLASS column to test dataset
-    test_df['CLASS'] = test_df['MATCH_KEY'].map(match_class_map)
-    
-    # Remove the temporary MATCH_KEY column
-    test_df = test_df.drop('MATCH_KEY', axis=1)
-    
-    # Save the labeled dataset
-    test_df.to_csv(output_path, index=False)
-    
-    # Print detailed statistics
-    total_samples = len(test_df)
-    labeled_samples = test_df['CLASS'].notna().sum()
-    unlabeled_samples = total_samples - labeled_samples
-    
-    print("\nLabeling Statistics:")
-    print(f"Total samples in test set: {total_samples}")
-    print(f"Successfully labeled samples: {labeled_samples}")
-    print(f"Unlabeled samples: {unlabeled_samples}")
+# Merge test.csv with full.csv based on CONTENT and AUTHOR
+labeled_test_df = test_df.merge(full_df[['COMMENT_ID', 'AUTHOR', 'DATE', 'CONTENT', 'CLASS']], 
+                                 on=['AUTHOR', 'CONTENT'], 
+                                 how='left')
 
-label_test_data(test,full,output)
+# Save the labeled test data to a new CSV file
+labeled_test_df.to_csv('labeled_test.csv', index=False)
+
+# Calculate the number of entries in the test and labeled files
+test_entries = len(test_df)
+labeled_test_entries = len(labeled_test_df)
+
+# Print the number of entries
+print("full entires: " + str(len(full_df)))
+print("test entires: " + str(len(test_df)))
+print("labeled entires: " + str(len(labeled_test_df)))
+
