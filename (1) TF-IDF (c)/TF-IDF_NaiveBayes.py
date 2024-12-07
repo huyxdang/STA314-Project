@@ -67,7 +67,3 @@ average_metrics = metrics_df.drop(columns=["Fold"]).mean(axis=0).to_dict()
 print("\nAverage Metrics Across Folds:")
 for metric, value in average_metrics.items():
     print(f"{metric}: {value:.4f}")
-
-# Train the final model on the entire dataset
-final_model = MultinomialNB()
-final_model.fit(X_tfidf, Y)
