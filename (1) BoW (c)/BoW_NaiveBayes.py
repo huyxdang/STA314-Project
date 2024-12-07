@@ -10,12 +10,7 @@ from nltk.stem import PorterStemmer
 import nltk
 
 # Set your n-value here:
-n = 6
-
-# Function to convert text to lowercase
-def lowercase_tokenizer(text):
-    # Tokenize the text into words and convert to lowercase
-    return text.lower().split()
+n = 10
 
 # Load data
 z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')  # Change file path
