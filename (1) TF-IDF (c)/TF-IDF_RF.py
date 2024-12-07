@@ -8,7 +8,7 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.ensemble import RandomForestClassifier
 
 # Set your n-value here:
-n = 10
+n = 5
 
 # Load data
 # Load data
