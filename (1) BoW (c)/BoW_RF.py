@@ -11,7 +11,7 @@ import nltk
 import zipfile
 
 # Set your n-value here:
-n = 9
+n = 10
 
 # Load data
 z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')  # Change file path
