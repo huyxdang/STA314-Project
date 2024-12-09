@@ -22,7 +22,7 @@ X = train_data['CONTENT'].values  # Text content
 Y = train_data['CLASS'].values  # Labels
 
 # Create TF-IDF representation with character 6-grams
-vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(n, n), max_features=5000)  # Character 6-grams
+vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(n, n), max_features=5000)
 X_tfidf = vectorizer.fit_transform(X)
 
 # Stratified 10-Fold Cross-Validation

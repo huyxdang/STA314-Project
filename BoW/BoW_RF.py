@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import time
 import psutil
 from sklearn.feature_extraction.text import CountVectorizer
@@ -11,7 +10,7 @@ import nltk
 import zipfile
 
 # Set your n-value here:
-n = 2
+n = 10
 
 # Load data
 z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')  # Change file path
