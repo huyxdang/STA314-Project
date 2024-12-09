@@ -11,7 +11,7 @@ import nltk
 import zipfile
 
 # Set your n-value here:
-n = 10
+n = 2
 
 # Load data
 z = zipfile.ZipFile('/Users/huydang/Desktop/STA314/Project/youtube_comments.zip')  # Change file path
@@ -25,7 +25,7 @@ X_test = test_data['CONTENT'].values  # Text content for testing
 test_ids = test_data['COMMENT_ID'].values  # Comment IDs for the test data
 
 # Create Bag of Words representation with character n-grams
-vectorizer = CountVectorizer(analyzer='char', ngram_range=(n, n))  # Apply lowercasing and split by whitespace
+vectorizer = CountVectorizer(analyzer='char', ngram_range=(n, n), max_features=5000)
 X_train_bow = vectorizer.fit_transform(X_train)
 X_test_bow = vectorizer.transform(X_test)
 
