@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import zipfile
 import time
 from sklearn.feature_extraction.text import TfidfVectorizer
